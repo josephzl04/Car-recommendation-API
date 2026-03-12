@@ -1,10 +1,25 @@
+#from pathlib import Path
+#import pandas as pd
+#from sqlalchemy import create_engine
+
+#BASE_DIR = Path(__file__).resolve().parent.parent
+#csv_path = BASE_DIR / "dataset" / "vehicles.csv"
+#db_path = f"sqlite:///{BASE_DIR /'cars.db'}"
+
+import os
 from pathlib import Path
 import pandas as pd
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 csv_path = BASE_DIR / "dataset" / "vehicles.csv"
-db_path = f"sqlite:///{BASE_DIR /'cars.db'}"
+db_url = os.getenv("DATABASE_URL")
+if not db_url:
+    raise ValueError("DATABASE_URL not found in environment variables")
+engine = create_engine(db_url)
 
 row_limit = 50000
 chunk_size = 10000
@@ -32,7 +47,7 @@ columns_to_keep = [
     "posting_date",
 ]
 
-engine = create_engine(db_path)
+#engine = create_engine(db_path)
 
 total_imported = 0
 first_chunk = True

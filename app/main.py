@@ -2,15 +2,18 @@ from fastapi import FastAPI, Depends, Query, HTTPException
 from sqlalchemy import create_engine, text
 from app.schemas import CarCreate, CarUpdate
 from app.auth import require_api_key
-from pathlib import Path
+#from pathlib import Path
 from fastapi_mcp import FastApiMCP
 import uuid
 from typing import Optional
+import os
 
 app = FastAPI(title = "Car Recommendation API")
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-engine = create_engine(f"sqlite:///{BASE_DIR /'cars.db'}")
+#BASE_DIR = Path(__file__).resolve().parent.parent
+#engine = create_engine(f"sqlite:///{BASE_DIR /'cars.db'}")
+DATABASE_URL = os.environ.get("DATABASE_URL")
+engine = create_engine(DATABASE_URL)
 
 mcp = FastApiMCP(app)
 mcp.mount_http()
