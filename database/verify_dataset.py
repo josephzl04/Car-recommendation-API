@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, text
+from pathlib import Path
 
-engine = create_engine("sqlite:///cars.db")
+BASE_DIR = Path(__file__).resolve().parent.parent
+engine = create_engine(f"sqlite:///{BASE_DIR /'cars.db'}")
 
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM cars"))
