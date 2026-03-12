@@ -64,7 +64,7 @@ def create_car(car: CarCreate, api_key: str = Depends(require_api_key)):
     Only accessible to admins
     """
     new_listing_id = int(uuid.uuid4().int % 1_000_000_000)  # Generate a unique listing_id
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         conn.execute(
             text("""
                 INSERT INTO cars (listing_id, manufacturer, model, year, price, fuel,
@@ -86,7 +86,6 @@ def create_car(car: CarCreate, api_key: str = Depends(require_api_key)):
                 "condition": car.condition
             }
         )
-        conn.commit()
     return {"message": "Car created successfully", "listing_id": new_listing_id}
 
 @app.put("/cars/{listing_id}")
@@ -96,7 +95,7 @@ def update_car(listing_id: int, car: CarUpdate, api_key: str = Depends(require_a
     Requires a valid API key in the X-API-Key header.
     Only accessible to admins
     """
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         # Check if the car exists
         result = conn.execute(
             text("SELECT * FROM cars WHERE listing_id = :listing_id"),
@@ -118,6 +117,27 @@ def update_car(listing_id: int, car: CarUpdate, api_key: str = Depends(require_a
 
         update_query = f"UPDATE cars SET {', '.join(update_fields)} WHERE listing_id = :listing_id"
         conn.execute(text(update_query), update_values)
-        conn.commit()
 
     return {"message": "Car updated successfully", "listing_id": listing_id}
+
+@app.delete("/cars/{listing_id}", status_code=200)
+def delete_car(listing_id: int, api_key: str = Depends(require_api_key)):
+    """
+    Delete a car from db using listing ID.
+    Requires a valid API key in the X-API-Key header.
+    Only accessible by admins.
+    """
+    with engine.begin() as conn:
+        result = conn.execute(
+            text("SELECT * FROM cars WHERE listing_id = :listing_id"),
+            {"listing_id": listing_id}
+        )
+        existing_car = result.fetchone()
+        if not existing_car:
+            raise HTTPException(status_code=404, detail="Car not found")
+
+        conn.execute(
+            text("DELETE FROM cars WHERE listing_id = :listing_id"),
+            {"listing_id": listing_id}
+        )
+    return {"message": "Car successfully deleted", "listing_id": listing_id}

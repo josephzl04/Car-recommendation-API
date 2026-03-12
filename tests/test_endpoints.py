@@ -94,10 +94,52 @@ def test_update_car():
     assert update_response.status_code == 200
     assert update_response.json()["listing_id"] == listing_id
 
+    # verify data was updated in db
+    with main_module.engine.connect() as conn:
+        result = conn.execute(text("SELECT price, odometer, condition FROM cars WHERE listing_id = :id"), {"id": listing_id})
+        row = result.fetchone()
+        assert row[0] == 11000
+        assert row[1] == 55000
+        assert row[2] == "good"
+
 def test_update_car_not_found():
     response = client.put("/cars/999999999", json={"price": 5000}, headers=headers)
     assert response.status_code == 404
 
 def test_update_car_without_auth():
     response = client.put("/cars/123", json={"price": 5000})
+    assert response.status_code == 401
+
+
+def test_delete_car():
+    # create a car to delete
+    create_response = client.post("/cars", json={
+        "manufacturer": "ford",
+        "model": "mustang",
+        "year": 2020,
+        "price": 25000,
+        "fuel": "gas",
+        "transmission": "automatic",
+        "odometer": 20000
+    }, headers=headers)
+
+    listing_id = create_response.json()["listing_id"]
+
+    delete_response = client.delete(f"/cars/{listing_id}", headers=headers)
+    assert delete_response.status_code == 200
+    assert delete_response.json()["listing_id"] == listing_id
+
+    with main_module.engine.connect() as conn:
+        row = conn.execute(
+            text("SELECT listing_id FROM cars WHERE listing_id = :id"),
+            {"id": listing_id}
+        ).fetchone()
+        assert row is None
+
+def test_delete_car_not_found():
+    response = client.delete("/cars/999999999",headers=headers)
+    assert response.status_code == 404
+
+def test_delete_car_without_auth():
+    response = client.delete("/cars/123")
     assert response.status_code == 401
