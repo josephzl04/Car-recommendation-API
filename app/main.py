@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Depends, Query
+from fastapi import FastAPI, Depends, Query, HTTPException
 from sqlalchemy import create_engine, text
-from app.schemas import CarCreate
+from app.schemas import CarCreate, CarUpdate
 from app.auth import require_api_key
 from pathlib import Path
 from fastapi_mcp import FastApiMCP
@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 engine = create_engine(f"sqlite:///{BASE_DIR /'cars.db'}")
 
 mcp = FastApiMCP(app)
-mcp.mount()
+mcp.mount_http()
 
 @app.get("/")
 def root():
@@ -88,3 +88,36 @@ def create_car(car: CarCreate, api_key: str = Depends(require_api_key)):
         )
         conn.commit()
     return {"message": "Car created successfully", "listing_id": new_listing_id}
+
+@app.put("/cars/{listing_id}")
+def update_car(listing_id: int, car: CarUpdate, api_key: str = Depends(require_api_key)):
+    """
+    Update an existing car listing in the database.
+    Requires a valid API key in the X-API-Key header.
+    Only accessible to admins
+    """
+    with engine.connect() as conn:
+        # Check if the car exists
+        result = conn.execute(
+            text("SELECT * FROM cars WHERE listing_id = :listing_id"),
+            {"listing_id": listing_id}
+        )
+        existing_car = result.fetchone()
+        if not existing_car:
+            raise HTTPException(status_code=404, detail="Car not found")
+
+        # Makes update dynamic instead of forcing all fields to be sent
+        update_fields = []
+        update_values = {"listing_id": listing_id}
+        for field in car.model_dump(exclude_unset=True):
+            update_fields.append(f"{field} = :{field}")
+            update_values[field] = getattr(car, field)
+
+        if not update_fields:
+            raise HTTPException(status_code=400, detail="No fields provided for update")
+
+        update_query = f"UPDATE cars SET {', '.join(update_fields)} WHERE listing_id = :listing_id"
+        conn.execute(text(update_query), update_values)
+        conn.commit()
+
+    return {"message": "Car updated successfully", "listing_id": listing_id}
