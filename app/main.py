@@ -267,6 +267,43 @@ def recommend_cars(
         "recommendations": [dict(r._mapping) for r in rows]
     }
 
+@app.get("/cars/similar/{listing_id}")
+def get_similar_cars(listing_id: int, limit: int = Query(5, ge=1, le=20)):
+    """Finds cars with similar attributes to given listing ID."""
+    with engine.connect() as conn:
+        # get original car
+        car = conn.execute(
+            text("SELECT * FROM cars WHERE listing_id = :id"),
+            {"id": listing_id}
+        ).fetchone()
+
+        if not car:
+            raise HTTPException(status_code=404, detail="Car not found")
+
+        similar_cars = conn.execute(text("""
+            SELECT listing_id, manufacturer, model, year, price, fuel,
+                   transmission, odometer, body_type, state, condition
+            FROM cars
+            WHERE listing_id != :id
+              AND LOWER(manufacturer) = LOWER(:manufacturer)
+              AND LOWER(model) = LOWER(:model)
+              AND year BETWEEN :min_year AND :max_year
+              AND price BETWEEN :min_price AND :max_price
+            ORDER BY ABS(price - :price) ASC
+            LIMIT :limit
+        """), {
+            "id": listing_id,
+            "manufacturer": car.manufacturer,
+            "model": car.model,
+            "min_year": car.year - 2,
+            "max_year": car.year + 2,
+            "min_price": car.price * 0.8,
+            "max_price": car.price * 1.2,
+            "price": car.price,
+            "limit": limit
+        }).fetchall()
+
+    return {"similar_cars": [dict(r._mapping) for r in similar_cars]}
 
 @app.get("/cars/{listing_id}")
 def get_car(listing_id: int):
@@ -279,3 +316,101 @@ def get_car(listing_id: int):
     if not result:
         raise HTTPException(status_code=404, detail="Car not found")
     return dict(result._mapping)
+
+@app.get("/stats/price-trends")
+def price_trends():
+    """Average car price per year"""
+    with engine.connect() as conn:
+        trends = conn.execute(text("""
+            SELECT year, ROUND(AVG(price), 0) as avg_price, COUNT(*) as listings
+            FROM cars
+            GROUP BY year
+            ORDER BY year DESC
+        """)).fetchall()
+
+    return {"price_trends": [dict(r._mapping) for r in trends]}
+
+@app.get("/stats/market-insights")
+def market_insights():
+    """Most affordable manufacturers, best value"""
+    with engine.connect() as conn:
+        affordable_manufacturers = conn.execute(text("""
+            SELECT manufacturer, ROUND(AVG(price), 0) as avg_price, COUNT(*) as listings
+            FROM cars GROUP BY LOWER(manufacturer)
+            HAVING COUNT(*) > 50
+            ORDER BY avg_price ASC LIMIT 10
+        """)).fetchall()
+
+        best_value_states = conn.execute(text("""
+            SELECT state, ROUND(AVG(price), 0) as avg_price, COUNT(*) as listings
+            FROM cars GROUP BY LOWER(state)
+            HAVING COUNT(*) > 50
+            ORDER BY avg_price ASC LIMIT 10
+        """)).fetchall()
+
+        price_by_body_type = conn.execute(text("""
+            SELECT body_type, ROUND(AVG(price), 0) as avg_price, COUNT(*) as listings
+            FROM cars WHERE body_type IS NOT NULL
+            GROUP BY LOWER(body_type)
+            ORDER BY avg_price DESC
+        """)).fetchall()
+
+    return {
+        "most_affordable_manufacturers": [dict(r._mapping) for r in affordable_manufacturers],
+        "best_value_states": [dict(r._mapping) for r in best_value_states],
+        "price_by_body_type": [dict(r._mapping) for r in price_by_body_type],
+    }
+
+
+@app.get("/stats")
+def get_stats():
+    """Returns analytical stats"""
+    with engine.connect() as conn:
+        overview = conn.execute(text("""
+            SELECT
+                COUNT(*) as total_listings,
+                ROUND(AVG(price), 0) as avg_price,
+                MIN(price) as min_price,
+                MAX(price) as max_price,
+                ROUND(AVG(year), 0) as avg_year,
+                ROUND(AVG(odometer), 0) as avg_odometer
+            FROM cars
+        """)).fetchone()
+
+        top_manufacturers = conn.execute(text("""
+            SELECT manufacturer, COUNT(*) as listings, ROUND(AVG(price), 0) as avg_price
+            FROM cars
+            GROUP BY LOWER(manufacturer)
+            ORDER BY listings DESC
+            LIMIT 10
+        """)).fetchall()
+
+        fuel_breakdown = conn.execute(text("""
+            SELECT fuel, COUNT(*) as count, ROUND(AVG(price), 0) as avg_price
+            FROM cars
+            GROUP BY LOWER(fuel)
+            ORDER BY count DESC
+        """)).fetchall()
+
+        transmission_breakdown = conn.execute(text("""
+            SELECT transmission, COUNT(*) as count
+            FROM cars
+            GROUP BY LOWER(transmission)
+            ORDER BY count DESC
+        """)).fetchall()
+
+        top_states = conn.execute(text("""
+            SELECT state, COUNT(*) as listings
+            FROM cars
+            GROUP BY LOWER(state)
+            ORDER BY listings DESC
+            LIMIT 10
+        """)).fetchall()
+
+    return {
+        "overview": dict(overview._mapping),
+        "top_manufacturers": [dict(r._mapping) for r in top_manufacturers],
+        "fuel_breakdown": [dict(r._mapping) for r in fuel_breakdown],
+        "transmission_breakdown": [dict(r._mapping) for r in transmission_breakdown],
+        "top_states": [dict(r._mapping) for r in top_states],
+    }
