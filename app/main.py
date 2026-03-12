@@ -7,8 +7,16 @@ from fastapi_mcp import FastApiMCP
 import uuid
 from typing import Optional
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title = "Car Recommendation API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #BASE_DIR = Path(__file__).resolve().parent.parent
 #engine = create_engine(f"sqlite:///{BASE_DIR /'cars.db'}")

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Recommendation API</title>
+</head>
+<body>
+    <h1>Car Recommendation API</h1>
+    <p>Loading...</p>
+
+    <script>
+        const API_URL = "https://car-recommendation-api.onrender.com";
+
+        async function testConnection() {
+            const response = await fetch(`${API_URL}/`);
+            const data = await response.json();
+            document.querySelector("p").textContent = data.message;
+        }
+
+        testConnection();
+    </script>
+</body>
+</html>
