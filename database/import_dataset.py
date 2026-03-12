@@ -1,8 +1,10 @@
+from pathlib import Path
 import pandas as pd
 from sqlalchemy import create_engine
 
-csv_path = "dataset/vehicles.csv"
-db_path = "sqlite:///cars.db"
+BASE_DIR = Path(__file__).resolve().parent.parent
+csv_path = BASE_DIR / "dataset" / "vehicles.csv"
+db_path = f"sqlite:///{BASE_DIR /'cars.db'}"
 
 row_limit = 50000
 chunk_size = 10000

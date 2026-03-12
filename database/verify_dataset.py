@@ -15,3 +15,7 @@ with engine.connect() as conn:
     print("\nSample rows:")
     for row in sample:
         print(row)
+
+    result = conn.execute(text("PRAGMA table_info(cars)"))
+    for row in result:
+        print(row)

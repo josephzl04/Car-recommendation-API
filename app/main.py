@@ -1,26 +1,14 @@
-from fastapi import FastAPI, HTTPException, Depends, status
-from fastapi.security.api_key import APIKeyHeader
+from fastapi import FastAPI, Depends
 from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
-import os
+from app.schemas import CarCreate
+from app.auth import require_api_key
+from pathlib import Path
 
 app = FastAPI(title = "Car Recommendation API")
 
-engine = create_engine("sqlite:///cars.db")
+BASE_DIR = Path(__file__).resolve().parent.parent
+engine = create_engine(f"sqlite:///{BASE_DIR /'cars.db'}")
 
-#authentication
-load_dotenv()
-API_KEY = os.getenv("API_KEY")
-api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
-
-def require_api_key(api_key: str = Depends(api_key_header)):
-    if api_key == API_KEY:
-        return api_key
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing API Key",
-        )
 
 @app.get("/")
 def root():
@@ -57,3 +45,27 @@ def get_cars(limit: int = 10):
 @app.get("/admin/test")
 def admin_test(api_key: str = Depends(require_api_key)):
     return {"message": "Admin access granted"}
+
+@app.post("/cars", status_code=201)
+def create_car(car: CarCreate, api_key: str = Depends(require_api_key)):
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("""
+                 INSERT INTO cars (manufacturer, model, year, price, fuel, transmission, odometer, body_type, state, condition)
+                 VALUES (:manufacturer, :model, :year, :price, :fuel, :transmission, :odometer, :body_type, :state, :condition)
+                 """),
+                 {
+                    "manufacturer": car.manufacturer,
+                    "model": car.model,
+                    "year": car.year,
+                    "price": car.price,
+                    "fuel": car.fuel,
+                    "transmission": car.transmission,
+                    "odometer": car.odometer,
+                    "body_type": car.body_type,
+                    "state": car.state,
+                    "condition": car.condition
+                 }
+        )
+        conn.commit()
+        return {"message": "Car created successfully", "listing_id": result.lastrowid}
