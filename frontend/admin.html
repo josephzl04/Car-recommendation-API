@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - CarAPI</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">CarAPI</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="search.html">Search</a></li>
+            <li><a href="recommend.html">Recommend</a></li>
+            <li><a href="stats.html">Stats</a></li>
+            <li><a href="similar.html">Similar</a></li>
+            <li><a href="car.html">Car Details</a></li>
+            <li><a href="admin.html">Admin</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-content">
+        <h1>Admin Panel</h1>
+        <p class="page-subtitle">Manage car listings — requires Admin (API Key)</p>
+
+        <div class="search-form">
+            <h2 class="form-title">API Key</h2>
+            <div class="form-grid" style="grid-template-columns: 1fr;">
+                <input type="password" id="api_key" placeholder="Enter your API key">
+            </div>
+            <button class="btn btn-primary" onclick="unlockAdmin()">Unlock</button>
+            <div id="auth-result" class="form-result"></div>
+        </div>
+        <div id="admin-content" style="display:none">
+            <div class="search-form">
+                <h2 class="form-title">Add New Listing</h2>
+                <div class="form-grid">
+                    <input type="text" id="c_manufacturer" placeholder="Manufacturer (required)">
+                    <input type="text" id="c_model" placeholder="Model (required)">
+                    <input type="number" id="c_year" placeholder="Year (required)">
+                    <input type="number" id="c_price" placeholder="Price $ (required)">
+                    <input type="text" id="c_fuel" placeholder="Fuel (optional)">
+                    <input type="text" id="c_transmission" placeholder="Transmission (optional)">
+                    <input type="number" id="c_odometer" placeholder="Odometer (optional)">
+                    <input type="text" id="c_state" placeholder="State (optional)">
+                    <input type="text" id="c_condition" placeholder="Condition (optional)">
+                </div>
+                <button class="btn btn-primary" onclick="createCar()">Add Listing</button>
+                <div id="create-result" class="form-result"></div>
+            </div>
+
+            <div class="search-form">
+                <h2 class="form-title">Update Listing</h2>
+                <div class="form-grid">
+                    <input type="number" id="u_listing_id" placeholder="Listing ID (required)">
+                    <input type="number" id="u_price" placeholder="New price $">
+                    <input type="number" id="u_odometer" placeholder="New odometer">
+                    <input type="text" id="u_condition" placeholder="New condition">
+                </div>
+                <button class="btn btn-primary" onclick="updateCar()">Update Listing</button>
+                <div id="update-result" class="form-result"></div>
+            </div>
+
+            <div class="search-form">
+                <h2 class="form-title">Delete Listing</h2>
+                <div class="form-grid" style="grid-template-columns: 1fr;">
+                    <input type="number" id="d_listing_id" placeholder="Listing ID (required)">
+                </div>
+                <button class="btn btn-danger" onclick="deleteCar()">Delete Listing</button>
+                <div id="delete-result" class="form-result"></div>
+            </div>
+        </div>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

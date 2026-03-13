@@ -367,3 +367,40 @@ main {
     border-color: rgba(255,255,255,0.5);
     color: white;
 }
+
+.form-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.form-result {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    min-height: 20px;
+}
+
+.result-success {
+    color: #4caf50;
+}
+
+.result-error {
+    color: #e94560;
+}
+
+.btn-danger {
+    background-color: #c0392b;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+}
