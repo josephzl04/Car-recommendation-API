@@ -2,7 +2,9 @@
 
 A RESTful API for exploring, searching and finding recommendations of used cars based on user preferences such as budget, mileage and vehicle attributes.
 
-This project uses CI/CD and can be deployed to cloud platforms.
+The system uses a public dataset of used car listings to allow users to query vehicles, analyse market trends.
+
+The API is built using FastAPI, and deployed using Docker with CI/CD automation.
 
 ## Features
 
@@ -20,18 +22,41 @@ This project uses CI/CD and can be deployed to cloud platforms.
 - **Frontend**: https://car-recommendation-frontend.onrender.com
 
 ## Tech Stack
-- **Backend**: FastAPI, Python 3.11
-- **Server**: Uvicorn (ASGI)
-- **Database**: PostgreSQL (production), SQLite (testing)
-- **ORM**: SQLAlchemy
+- **Backend**: FastAPI, Python 3.11, Uvicorn (ASGI Server)
+- **Database**: PostgreSQL (production), SQLite (local development and testing)
+- **ORM**: SQLAlchemy ORM
 - **Validation**: Pydantic
-- **Auth**: API Key via `X-API-Key` header
-- **Deployment**: Render (Docker)
+- **Authentication**: API Key via `X-API-Key` header
+- **Deployment**: Render (Docker containerisation)
 - **CI/CD**: GitHub Actions + Render auto-deploy when CI succeeds
 
+## Dataset
+This project uses the Craigslist Vehicles Datset from Kaggle:
+https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data
+The dataset contains vehicle listings with attributes such as:
+- Manufacturer
+- Model
+- Price
+- Year
+- Mileage
+- Fuel type
+
+To ensure manageable local development and faster queries, the dataset python import script loads up to 50,000 rows into the database.
+
+## Authentication
+The API is protected using an API Key
+
+Requests must include the following header:
+X-API-Key: your_secret_key_here
+
+Requests without a valid key will return:
+401 Unauthorised
 ---
 
-## Local Setup Two Options - Docker or Manual
+## Local Setup
+Two options are available
+Docker
+Manual Python environment
 
 ### Prerequisites
 - Python 3.11 or Docker
@@ -108,7 +133,7 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### 3. Install dependencies
+#### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
@@ -181,9 +206,9 @@ set DATABASE_URL=your_render_db_url && python database/import_dataset.py
 
 # Mac/Linux
 DATABASE_URL=your_render_db_url python database/import_dataset.py
+```
 
-
-### Backend
+### Backend Deployment
 1. Create a new **Web Service** on [Render](https://render.com)
 2. Connect your GitHub repository
 3. Set runtime to **Docker** 
@@ -193,7 +218,7 @@ DATABASE_URL=your_render_db_url python database/import_dataset.py
 5. Set auto-deploy to **After CI Checks Pass**
 6. Deploy
 
-### Frontend
+### Frontend Deployment
 1. Create a new **Static Site** on Render
 2. Connect your GitHub repository
 3. Set publish directory to `frontend`
@@ -201,7 +226,7 @@ DATABASE_URL=your_render_db_url python database/import_dataset.py
 5. Deploy
 
 ## Project Structure
-```
+
 Car-recommendation-API/
 ├── app/
 │   ├── __init__.py
@@ -222,7 +247,8 @@ Car-recommendation-API/
 │   ├── similar.html
 │   ├── car.html
 │   ├── admin.html
-│   ├── css/style.css
+│   ├── css/
+│   │   └── style.css
 │   └── js/
 │       └── admin.js
 │       └── api.js
@@ -241,3 +267,5 @@ Car-recommendation-API/
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
+
+```
