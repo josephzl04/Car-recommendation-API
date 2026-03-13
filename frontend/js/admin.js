@@ -39,16 +39,18 @@ async function createCar() {
         model: document.getElementById("c_model").value,
         year: parseInt(document.getElementById("c_year").value),
         price: parseInt(document.getElementById("c_price").value),
+        transmission: document.getElementById("c_transmission").value,
         fuel: document.getElementById("c_fuel").value || null,
-        transmission: document.getElementById("c_transmission").value || null,
         odometer: parseInt(document.getElementById("c_odometer").value) || null,
         state: document.getElementById("c_state").value || null,
         condition: document.getElementById("c_condition").value || null,
     };
 
-    if (!body.manufacturer || !body.model || !body.year || !body.price) {
-        return showResult("create-result", "Manufacturer, model, year and price are required.", false);
+    if (!body.manufacturer || !body.model || !body.year || !body.price || !body.transmission) {
+    return showResult("create-result", "Manufacturer, model, year, price and transmission are required.", false);
     }
+
+    console.log("Sending content:", JSON.stringify(body));
 
     try {
         const res = await fetch(`${API_URL}/cars`, {
