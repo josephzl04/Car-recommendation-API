@@ -62,7 +62,7 @@ https://car-recommendation-api.onrender.com/docs
 
 A static PDF version of the API documentation is also included in this  repository:
 
-[API Documentation PDF](docs/APIdoc.pdf)
+[API Documentation PDF](/APIdoc.pdf)
 
 ---
 
