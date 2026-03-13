@@ -128,8 +128,8 @@ docker build -t cars-api .
 docker run -e API_KEY=your_key -e DATABASE_URL=sqlite:///cars.db -p 8080:8080 cars-api
 ```
 
-API will be available at: http://localhost:8000
-Swagger docs at: http://localhost:8000/docs
+API will be available at: http://localhost:8080
+Swagger docs at: http://localhost:8080/docs
 
 > Note: Docker handles starting the local server automatically - no need to run uvicorn manually.
 
