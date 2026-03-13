@@ -167,7 +167,7 @@ def search_cars(
     state: Optional[str] = Query(None, description="US state abbreviation e.g. ca, tx"),
     max_odometer: Optional[int] = Query(None, description="Maximum mileage"),
     condition: Optional[str] = Query(None, description="Condition e.g. good, excellent, fair"),
-    limit: int = Query(20, ge=1, le=100, description="Number of results to return")):
+    limit: int = Query(50, ge=1, le=100, description="Number of results to return")):
     """
     Searching for cars with filters
     """

@@ -90,7 +90,6 @@ nav {
 .btn-primary {
     background-color: #e94560;
     color: white;
-    box-shadow: 0 4px 15px rgba(233,69,96,0.4);
 }
 
 .btn-secondary {
@@ -152,4 +151,104 @@ nav {
 main {
     min-height: calc(100vh - 60px);
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.page-content {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.page-content h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 30px;
+}
+
+.search-form {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 30px;
+    max-width: 1000px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.form-grid input {
+    padding: 10px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 0.85rem;
+}
+
+.form-grid input::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+
+.cars-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.car-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 16px 20px;
+}
+
+.car-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.car-title {
+    font-weight: 600;
+    color: white;
+    font-size: 1rem;
+}
+
+.car-price {
+    color: #e94560;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.car-details {
+    display: flex;
+    gap: 16px;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+}
+
+.results-count {
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.loading {
+    color: rgba(255,255,255,0.6);
+}
+
+.no-results {
+    color: rgba(255,255,255,0.6);
 }

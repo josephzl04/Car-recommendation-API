@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Cars - CarAPI</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">CarAPI</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="search.html">Search</a></li>
+            <li><a href="recommend.html">Recommend</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-content">
+        <h1>Search Cars</h1>
+        <p class="page-subtitle">Filter by manufacturer, price, year and more</p>
+
+        <div class="search-form">
+            <div class="form-grid">
+                <input type="text" id="manufacturer" placeholder="Manufacturer e.g. toyota">
+                <input type="number" id="min_price" placeholder="Min price ($)">
+                <input type="number" id="max_price" placeholder="Max price ($)">
+                <input type="number" id="min_year" placeholder="Min year e.g. 2015">
+                <input type="number" id="max_year" placeholder="Max year e.g. 2022">
+                <input type="text" id="fuel" placeholder="Fuel e.g. gas, diesel">
+                <input type="text" id="transmission" placeholder="Transmission e.g. automatic">
+                <input type="text" id="state" placeholder="State e.g. ca, tx">
+            </div>
+            <button class="btn btn-primary" onclick="searchCars()">Search</button>
+        </div>
+        <div id="results"></div>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>
