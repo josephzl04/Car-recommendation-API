@@ -67,7 +67,7 @@ A static PDF version of the API documentation is also included in this  reposito
 ## API Endpoints
 
 | Method | Endpoint | Description | Auth Required |
-|------|------|------|------|
+|------|------|------|:------:|
 | GET | `/` | Check that the API is running | ❌ |
 | GET | `/cars` | Retrieve a list of cars (supports `limit` query parameter) | ❌ |
 | GET | `/cars/{listing_id}` | Retrieve a single car by its listing ID | ❌ |
@@ -255,4 +255,3 @@ DATABASE_URL=your_render_db_url python database/import_dataset.py
 3. Set publish directory to `frontend`
 4. Set auto-deploy to **After CI Checks Pass**
 5. Deploy
-```
