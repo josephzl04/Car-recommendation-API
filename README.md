@@ -125,7 +125,7 @@ docker build -t cars-api .
 
 #### 6. Run the container
 ```bash
-docker run -e API_KEY=your_key -e DATABASE_URL=sqlite:///cars.db -p 8000:8000 cars-api
+docker run -e API_KEY=your_key -e DATABASE_URL=sqlite:///cars.db -p 8080:8080 cars-api
 ```
 
 API will be available at: http://localhost:8000
