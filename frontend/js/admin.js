@@ -1,3 +1,5 @@
+let storedApiKey = "";
+
 async function unlockAdmin() {
     const key = document.getElementById("api_key").value;
     if (!key) return showResult("auth-result", "Please enter your API key.", false);
@@ -7,6 +9,7 @@ async function unlockAdmin() {
             headers: { "X-API-Key": key }
         });
         if (res.status === 200) {
+            storedApiKey = key;
             document.getElementById("admin-content").style.display = "block";
             document.querySelector(".search-form").style.display = "none";
             showResult("auth-result", "Access granted.", true);
@@ -19,9 +22,8 @@ async function unlockAdmin() {
 }
 
 function getApiKey() {
-    return document.getElementById("api_key").value;
+    return storedApiKey;
 }
-
 function showResult(elementId, message, success) {
     const el = document.getElementById(elementId);
     el.textContent = message;
