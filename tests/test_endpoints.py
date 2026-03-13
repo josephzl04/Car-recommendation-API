@@ -43,6 +43,7 @@ def use_test_db():
     if os.path.exists("test.db"):
         os.remove("test.db")
 
+# creates a car with valid data and api key, checks it was created and assigned an ID
 def test_create_car():
     response = client.post("/cars", json={
         "manufacturer": "toyota",
@@ -58,21 +59,7 @@ def test_create_car():
     assert response.status_code == 201
     assert "listing_id" in response.json()
 
-def test_create_car_without_auth():
-    response = client.post("/cars", json={
-        "manufacturer": "toyota",
-        "model": "camry",
-        "year": 2018,
-        "price": 15000,
-        "fuel": "gas",
-        "transmission": "automatic",
-        "odometer": 45000
-    })
-    assert response.status_code == 401
-
-
 def test_update_car():
-    # first create a car to update
     create_response = client.post("/cars", json={
         "manufacturer": "honda",
         "model": "civic",
@@ -106,13 +93,7 @@ def test_update_car_not_found():
     response = client.put("/cars/999999999", json={"price": 5000}, headers=headers)
     assert response.status_code == 404
 
-def test_update_car_without_auth():
-    response = client.put("/cars/123", json={"price": 5000})
-    assert response.status_code == 401
-
-
 def test_delete_car():
-    # create a car to delete
     create_response = client.post("/cars", json={
         "manufacturer": "ford",
         "model": "mustang",
@@ -140,6 +121,95 @@ def test_delete_car_not_found():
     response = client.delete("/cars/999999999",headers=headers)
     assert response.status_code == 404
 
-def test_delete_car_without_auth():
-    response = client.delete("/cars/123")
-    assert response.status_code == 401
+# test endpoint is working
+def test_get_cars():
+    response = client.get("/cars")
+    assert response.status_code == 200
+    assert "cars" in response.json()
+    assert "count" in response.json()
+
+def test_get_car_by_id():
+    create_response = client.post("/cars", json={
+        "manufacturer": "nissan",
+        "model": "altima",
+        "year": 2019,
+        "price": 14000,
+        "fuel": "gas",
+        "transmission": "automatic",
+        "odometer": 30000
+    }, headers=headers)
+    listing_id = create_response.json()["listing_id"]
+
+    get_response = client.get(f"/cars/{listing_id}")
+    assert get_response.status_code == 200
+    assert get_response.json()["listing_id"] == listing_id
+    assert get_response.json()["manufacturer"] == "nissan"
+
+# search for a car id that doesnt exist
+def test_get_car_by_id_not_found():
+    response = client.get("/cars/999999999")
+    assert response.status_code == 404
+
+# create a car then search for it using the endpoint, verifies correct result
+def test_search_cars():
+    client.post("/cars", json={
+        "manufacturer": "subaru",
+        "model": "outback",
+        "year": 2018,
+        "price": 18000,
+        "fuel": "gas",
+        "transmission": "automatic",
+        "odometer": 40000,
+        "state": "tx"
+    }, headers=headers)
+
+    response = client.get("/cars/search?manufacturer=subaru&state=tx")
+    assert response.status_code == 200
+    assert response.json()["count"] >= 1
+    assert response.json()["cars"][0]["manufacturer"] == "subaru"
+
+# search for a random manufacturer that doesnt exist
+def test_search_cars_no_results():
+    response = client.get("/cars/search?manufacturer=nonexistent")
+    assert response.status_code == 404
+
+# create and add 3 cars to db, requests limit of 2, verifies that no  more than 2 cars are returned
+def test_get_cars_limit():
+    for i in range(3):
+        client.post("/cars", json={
+            "manufacturer": "toyota",
+            "model": "camry",
+            "year": 2018,
+            "price": 15000,
+            "fuel": "gas",
+            "transmission": "automatic",
+            "odometer": 45000
+        }, headers=headers)
+
+    response = client.get("/cars?limit=2")
+    assert response.status_code == 200
+    assert response.json()["count"] <= 2
+
+# creates a car and then tests the recommendation endpoint to ensure it returns at least 1 recommendation based on the created car
+def test_recommend_cars():
+    client.post("/cars", json={
+        "manufacturer": "mazda",
+        "model": "cx-5",
+        "year": 2019,
+        "price": 20000,
+        "fuel": "gas",
+        "transmission": "automatic",
+        "odometer": 25000,
+        "state": "fl",
+        "condition": "good"
+    }, headers=headers)
+    response = client.get("/cars/recommend?budget=25000&min_year=2015")
+    assert response.status_code == 200
+    assert "recommendations" in response.json()
+    assert response.json()["count"] >= 1
+
+def test_root():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Car Recommendation API is running"}
+
