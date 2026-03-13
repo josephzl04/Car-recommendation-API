@@ -5,7 +5,7 @@ async function recommendCars() {
         document.getElementById("results").innerHTML = "<p class='no-results'>Please enter a budget.</p>";
         return;
     }
-    
+
     const params = new URLSearchParams();
     params.append("budget", budget);
 
@@ -42,7 +42,7 @@ async function recommendCars() {
                             <span>${car.odometer.toLocaleString()} mi</span>
                             <span>${car.state.toUpperCase()}</span>
                         </div>
-                        <div class='score-badge'>Score: ${car.value_score}</div>
+                        <div class='score-badge'>Similiarity Score: ${car.value_score}</div>
                     </div>
                 `).join("")}
             </div>`;

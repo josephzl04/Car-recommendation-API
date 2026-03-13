@@ -225,7 +225,7 @@ def recommend_cars(
     min_year: int = Query(2010, description="Minimum model year"),
     fuel: Optional[str] = Query(None, description="Preferred fuel type e.g. gas, diesel, electric"),
     transmission: Optional[str] = Query(None, description="Preferred transmission e.g. automatic, manual"),
-    limit: int = Query(10, ge=1, le=50, description="Number of recommendations"),):
+    limit: int = Query(25, ge=1, le=50, description="Number of recommendations"),):
     """
     Recommends best value cars based on weight scoring
     Higher score = higher ranked in recommended list
