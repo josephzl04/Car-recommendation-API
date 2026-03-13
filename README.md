@@ -64,6 +64,24 @@ A static PDF version of the API documentation is also included in this  reposito
 
 [API Documentation PDF](/APIdoc.pdf)
 
+## API Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|------|------|------|------|
+| GET | `/` | Check that the API is running | ❌ |
+| GET | `/cars` | Retrieve a list of cars (supports `limit` query parameter) | ❌ |
+| GET | `/cars/{listing_id}` | Retrieve a single car by its listing ID | ❌ |
+| GET | `/cars/search` | Search for cars using filters such as manufacturer, price, year, fuel, mileage, etc. | ❌ |
+| GET | `/cars/recommend` | Recommend cars based on budget, mileage, and preference scoring | ❌ |
+| GET | `/cars/similar/{listing_id}` | Find vehicles similar to a given car listing | ❌ |
+| POST | `/cars` | Create a new car listing | ✅ |
+| PUT | `/cars/{listing_id}` | Update an existing car listing | ✅ |
+| DELETE | `/cars/{listing_id}` | Delete a car listing | ✅ |
+| GET | `/admin/test` | Test endpoint to verify API key authentication | ✅ |
+| GET | `/stats` | General market statistics and overview | ❌ |
+| GET | `/stats/price-trends` | Average car price trends by year | ❌ |
+| GET | `/stats/market-insights` | Market insights such as affordable manufacturers and value states | ❌ |
+
 ---
 
 ## Local Setup
@@ -191,7 +209,7 @@ Swagger docs at: http://localhost:8000/docs
 pytest tests/ -v
 ```
 
-Tests use a temporary SQLite database so it doesn't affect the actual PostgreSQL database. 19 tests are included.
+Tests use a temporary SQLite database so it doesn't affect the actual database. 19 tests are included.
 
 ---
 
@@ -237,48 +255,4 @@ DATABASE_URL=your_render_db_url python database/import_dataset.py
 3. Set publish directory to `frontend`
 4. Set auto-deploy to **After CI Checks Pass**
 5. Deploy
-
-## Project Structure
-
-Car-recommendation-API/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # Routes and business logic
-│   ├── auth.py              # API key authentication
-│   └── schemas.py           # Pydantic models
-├── database/
-│   ├── import_dataset.py    # Imports CSV into database
-│   ├── verify_dataset.py    # Verifies import was successful
-│   └── explore_dataset.py   # Explores raw CSV data
-├── dataset/
-│   └── vehicles.csv         # Not included, download from Kaggle
-├── frontend/
-│   ├── index.html
-│   ├── search.html
-│   ├── recommend.html
-│   ├── stats.html
-│   ├── similar.html
-│   ├── car.html
-│   ├── admin.html
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       └── admin.js
-│       └── api.js
-│       └── car.js
-│       └── recommend.js
-│       └── similar.js
-│       └── stats.js
-├── tests/
-│   ├── __init__.py
-│   ├── test_auth.py
-│   └── test_endpoints.py
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── .env                     # Not included, create manually
-├── Dockerfile
-├── requirements.txt
-└── README.md
-
 ```
