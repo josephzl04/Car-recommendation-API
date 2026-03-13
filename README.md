@@ -31,7 +31,7 @@ The API is built using FastAPI, and deployed using Docker with CI/CD automation.
 - **CI/CD**: GitHub Actions + Render auto-deploy when CI succeeds
 
 ## Dataset
-This project uses the Craigslist Vehicles Datset from Kaggle:
+This project uses the Craigslist Vehicles Dataset from Kaggle:
 https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data
 The dataset contains vehicle listings with attributes such as:
 - Manufacturer
@@ -51,6 +51,19 @@ X-API-Key: your_secret_key_here
 
 Requests without a valid key will return:
 401 Unauthorised
+
+
+## API Documentation
+Interactive API documentation is automatically generated using FastAPI Swagger.
+It includes full endpoint definitions, request parameters, and example responses.
+
+Access the live interactive documentation here:
+https://car-recommendation-api.onrender.com/docs
+
+A static PDF version of the API documentation is also included in this  repository:
+
+[API Documentation PDF](docs/APIdoc.pdf)
+
 ---
 
 ## Local Setup
@@ -95,7 +108,7 @@ python database/import_dataset.py
 
 This imports up to 50,000 rows into the local SQLite database.
 
-### 5. Build the Docker image
+#### 5. Build the Docker image
 ``` bash
 docker build -t cars-api .
 ```
