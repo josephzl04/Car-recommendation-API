@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN sed -i 's/\r$//' entrypoint.sh
+
 RUN chmod +x entrypoint.sh
 
 EXPOSE 8080
