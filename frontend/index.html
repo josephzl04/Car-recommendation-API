@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Recommendation API</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Car Recommendation API</h1>
-    <p>Loading...</p>
 
-    <script>
-        const API_URL = "https://car-recommendation-api.onrender.com";
+    <nav>
+        <div class="nav-brand">🚗 CarAPI</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="search.html">Search</a></li>
+            <li><a href="recommend.html">Recommend</a></li>
+        </ul>
+    </nav>
 
-        async function testConnection() {
-            const response = await fetch(`${API_URL}/`);
-            const data = await response.json();
-            document.querySelector("p").textContent = data.message;
-        }
+    <main>
+        <section class="hero">
+            <h1>Car Recommendation API</h1>
+            <p>Explore 50,000 used car listings. Search by filters or get personalised recommendations based on your budget.</p>
+            <div class="hero-buttons">
+                <a href="search.html" class="btn btn-primary">Search Cars</a>
+                <a href="recommend.html" class="btn btn-secondary">Get Recommendations</a>
+            </div>
+        </section>
+    </main>
 
-        testConnection();
-    </script>
+    <script src="js/api.js"></script>
+
 </body>
 </html>
