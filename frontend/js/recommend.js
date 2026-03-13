@@ -1,6 +1,6 @@
 function toggleDetails(id) {
     const extra = document.getElementById(`extra-${id}`);
-    const btn = extra.nextElementSibling;
+    const btn = document.querySelector(`#car-${id} .btn-expand`);
     if (extra.style.display === "none") {
         extra.style.display = "block";
         btn.textContent = "Hide Details";
