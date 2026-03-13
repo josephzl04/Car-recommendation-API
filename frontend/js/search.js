@@ -34,6 +34,7 @@ async function searchCars() {
                             <span>${car.odometer.toLocaleString()} mi</span>
                             <span>${car.state.toUpperCase()}</span>
                         </div>
+                        <div class='listing-id'>ID: ${car.listing_id}</div>
                     </div>
                 `).join("")}
             </div>`;

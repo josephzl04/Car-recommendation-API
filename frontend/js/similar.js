@@ -1,35 +1,31 @@
-async function recommendCars() {
-    const budget = document.getElementById("budget").value;
+async function findSimilar() {
+    const listingId = document.getElementById("listing_id").value;
 
-    if (!budget) {
-        document.getElementById("results").innerHTML = "<p class='no-results'>Please enter a budget.</p>";
+    if (!listingId) {
+        document.getElementById("results").innerHTML = "<p class='no-results'>Please enter a listing ID.</p>";
         return;
     }
 
-    const params = new URLSearchParams();
-    params.append("budget", budget);
-
-    const optionalFields = ["max_odometer", "min_year", "fuel", "transmission"];
-    optionalFields.forEach(field => {
-        const value = document.getElementById(field).value;
-        if (value) params.append(field, value);
-    });
-
     const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "<p class='loading'>Finding best matches...</p>";
+    resultsDiv.innerHTML = "<p class='loading'>Searching for similar cars...</p>";
 
     try {
-        const response = await fetch(`${API_URL}/cars/recommend?${params.toString()}`);
+        const response = await fetch(`${API_URL}/cars/similar/${listingId}`);
         const data = await response.json();
 
         if (response.status === 404) {
-            resultsDiv.innerHTML = "<p class='no-results'>No cars found within your budget.</p>";
+            resultsDiv.innerHTML = "<p class='no-results'>No car found with that listing ID.</p>";
             return;
         }
 
-        resultsDiv.innerHTML = `<p class='results-count'>${data.count} recommendations found</p>
+        if (data.similar_cars.length === 0) {
+            resultsDiv.innerHTML = "<p class='no-results'>No similar cars found for this listing.</p>";
+            return;
+        }
+
+        resultsDiv.innerHTML = `<p class='results-count'>${data.similar_cars.length} similar cars found</p>
             <div class='cars-grid'>
-                ${data.recommendations.map((car, index) => `
+                ${data.similar_cars.map(car => `
                     <div class='car-card'>
                         <div class='car-header'>
                             <span class='car-title'>${car.manufacturer.toUpperCase()} ${car.model}</span>
@@ -42,7 +38,6 @@ async function recommendCars() {
                             <span>${car.odometer.toLocaleString()} mi</span>
                             <span>${car.state.toUpperCase()}</span>
                         </div>
-                        <div class='score-badge'>Similiarity Score: ${car.value_score}</div>
                         <div class='listing-id'>ID: ${car.listing_id}</div>
                     </div>
                 `).join("")}
