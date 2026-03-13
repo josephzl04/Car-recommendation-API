@@ -128,6 +128,19 @@ docker build -t cars-api .
 docker run -e API_KEY=your_key -e DATABASE_URL=sqlite:///cars.db -p 8080:8080 cars-api
 ```
 
+### Troubleshooting
+
+If the container starts but shows an error such as:
+
+`Error: dataset/vehicles.csv not found` or the database is missing,
+
+this may occur due to Docker build caching. If the dataset was added after the initial build, Docker may reuse cached layers and not detect the new file.
+
+To resolve this, rebuild Docker from step 5
+``` bash
+docker build -t cars-api .
+```
+
 API will be available at: http://localhost:8080
 Swagger docs at: http://localhost:8080/docs
 
