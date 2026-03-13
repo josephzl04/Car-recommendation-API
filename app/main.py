@@ -253,14 +253,14 @@ def recommend_cars(
         rows = conn.execute(text(f"""
             SELECT listing_id, manufacturer, model, year, price, fuel,
                    transmission, odometer, body_type, state, condition,
-                   ROUND(
-                    (1.0 - CAST(price AS REAL) / :budget) * 0.35
-                    + (1.0 - CAST(odometer AS REAL) / :max_odometer) * 0.25
-                    + ((CAST(year AS REAL) - :min_year) / (2026 - :min_year)) * 0.20
-                    + CASE WHEN :fuel IS NOT NULL AND LOWER(fuel) = LOWER(:fuel) THEN 0.10 ELSE 0 END
-                    + CASE WHEN :transmission IS NOT NULL AND LOWER(transmission) = LOWER(:transmission) THEN 0.10 ELSE 0 END
-                , 3) AS value_score
-                                 
+                   ROUND((
+                        (1.0 - CAST(price AS NUMERIC) / :budget) * 0.35
+                        + (1.0 - CAST(odometer AS NUMERIC) / :max_odometer) * 0.25
+                        + ((CAST(year AS NUMERIC) - :min_year) / (2026 - :min_year)) * 0.20
+                        + CASE WHEN :fuel IS NOT NULL AND LOWER(fuel) = LOWER(:fuel) THEN 0.10 ELSE 0 END
+                        + CASE WHEN :transmission IS NOT NULL AND LOWER(transmission) = LOWER(:transmission) THEN 0.10 ELSE 0 END
+                        )::numeric
+                    , 3) AS value_score
             FROM cars
             {where_clause}
             ORDER BY value_score DESC
