@@ -1,3 +1,15 @@
+function toggleDetails(id) {
+    const extra = document.getElementById(`extra-${id}`);
+    const btn = extra.nextElementSibling;
+    if (extra.style.display === "none") {
+        extra.style.display = "block";
+        btn.textContent = "Hide Details";
+    } else {
+        extra.style.display = "none";
+        btn.textContent = "View Details";
+    }
+}
+
 async function recommendCars() {
     const budget = document.getElementById("budget").value;
 
@@ -30,7 +42,7 @@ async function recommendCars() {
         resultsDiv.innerHTML = `<p class='results-count'>${data.count} recommendations found</p>
             <div class='cars-grid'>
                 ${data.recommendations.map((car, index) => `
-                    <div class='car-card'>
+                    <div class='car-card' id='car-${car.listing_id}'>
                         <div class='car-header'>
                             <span class='car-title'>${car.manufacturer.toUpperCase()} ${car.model}</span>
                             <span class='car-price'>$${car.price.toLocaleString()}</span>
@@ -42,7 +54,16 @@ async function recommendCars() {
                             <span>${car.odometer.toLocaleString()} mi</span>
                             <span>${car.state.toUpperCase()}</span>
                         </div>
-                        <div class='score-badge'>Similiarity Score: ${car.value_score}</div>
+                        <div class='car-extra' id='extra-${car.listing_id}' style='display:none'>
+                            <div class='extra-grid'>
+                                <div><span class='extra-label'>Listing ID</span><span class='extra-value'>${car.listing_id}</span></div>
+                                <div><span class='extra-label'>Body Type</span><span class='extra-value'>${car.body_type || "N/A"}</span></div>
+                                <div><span class='extra-label'>Condition</span><span class='extra-value'>${car.condition || "N/A"}</span></div>
+                                <div><span class='extra-label'>State</span><span class='extra-value'>${car.state ? car.state.toUpperCase() : "N/A"}</span></div>
+                            </div>
+                        </div>
+                        <div class='score-badge'>Score: ${car.value_score}</div>
+                        <button class='btn-expand' onclick='toggleDetails(${car.listing_id})'>View Details</button>
                         <div class='listing-id'>ID: ${car.listing_id}</div>
                     </div>
                 `).join("")}

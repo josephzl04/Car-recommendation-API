@@ -1,3 +1,12 @@
+window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (id) {
+        document.getElementById("listing_id").value = id;
+        findSimilar();
+    }
+}
+
 async function findSimilar() {
     const listingId = document.getElementById("listing_id").value;
 
