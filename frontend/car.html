@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Recommendation API</title>
+    <title>Car Details - CarAPI</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -20,16 +20,20 @@
         </ul>
     </nav>
 
-    <main>
-        <section class="hero">
-            <h1>Car Recommendation API</h1>
-            <p>Explore 50,000 used car listings. Search by filters or get personalised recommendations based on your budget.</p>
-            <div class="hero-buttons">
-                <a href="search.html" class="btn btn-primary">Search Cars</a>
-                <a href="recommend.html" class="btn btn-secondary">Get Recommendations</a>
+    <main class="page-content">
+        <h1>Car Details</h1>
+        <p class="page-subtitle">Look up full details for any listing by ID</p>
+
+        <div class="search-form">
+            <div class="form-grid" style="grid-template-columns: 1fr;">
+                <input type="number" id="listing_id" placeholder="Enter listing ID e.g. 7316814884">
             </div>
-        </section>
+            <button class="btn btn-primary" onclick="lookupCar()">Look Up</button>
+        </div>
+
+        <div id="result"></div>
     </main>
     <script src="js/api.js"></script>
+    <script src="js/car.js"></script>
 </body>
 </html>
