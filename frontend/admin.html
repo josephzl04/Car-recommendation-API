@@ -45,6 +45,7 @@
                     <input type="number" id="c_odometer" placeholder="Odometer (optional)">
                     <input type="text" id="c_state" placeholder="State (optional)">
                     <input type="text" id="c_condition" placeholder="Condition (optional)">
+                    <input type="text" id="c_body_type" placeholder="Body type (optional)">
                 </div>
                 <button class="btn btn-primary" onclick="createCar()">Add Listing</button>
                 <div id="create-result" class="form-result"></div>
@@ -54,9 +55,16 @@
                 <h2 class="form-title">Update Listing</h2>
                 <div class="form-grid">
                     <input type="number" id="u_listing_id" placeholder="Listing ID (required)">
-                    <input type="number" id="u_price" placeholder="New price $">
-                    <input type="number" id="u_odometer" placeholder="New odometer">
-                    <input type="text" id="u_condition" placeholder="New condition">
+                    <input type="text" id="u_manufacturer" placeholder="Manufacturer">
+                    <input type="text" id="u_model" placeholder="Model">
+                    <input type="number" id="u_year" placeholder="Year">
+                    <input type="number" id="u_price" placeholder="Price $">
+                    <input type="text" id="u_transmission" placeholder="Transmission">
+                    <input type="text" id="u_fuel" placeholder="Fuel">
+                    <input type="number" id="u_odometer" placeholder="Odometer">
+                    <input type="text" id="u_state" placeholder="State">
+                    <input type="text" id="u_condition" placeholder="Condition">
+                    <input type="text" id="u_body_type" placeholder="Body type">
                 </div>
                 <button class="btn btn-primary" onclick="updateCar()">Update Listing</button>
                 <div id="update-result" class="form-result"></div>

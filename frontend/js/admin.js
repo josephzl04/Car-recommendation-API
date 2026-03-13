@@ -44,6 +44,7 @@ async function createCar() {
         odometer: parseInt(document.getElementById("c_odometer").value) || null,
         state: document.getElementById("c_state").value || null,
         condition: document.getElementById("c_condition").value || null,
+        body_type: document.getElementById("c_body_type").value || null,
     };
 
     if (!body.manufacturer || !body.model || !body.year || !body.price || !body.transmission) {
@@ -78,14 +79,26 @@ async function updateCar() {
     const listingId = document.getElementById("u_listing_id").value;
     if (!listingId) return showResult("update-result", "Please enter a listing ID.", false);
 
-    const body = {};
-    const price = document.getElementById("u_price").value;
-    const odometer = document.getElementById("u_odometer").value;
-    const condition = document.getElementById("u_condition").value;
+   const body = {};
+    const fields = {
+        manufacturer: document.getElementById("u_manufacturer").value,
+        model: document.getElementById("u_model").value,
+        year: document.getElementById("u_year").value,
+        price: document.getElementById("u_price").value,
+        transmission: document.getElementById("u_transmission").value,
+        fuel: document.getElementById("u_fuel").value,
+        odometer: document.getElementById("u_odometer").value,
+        state: document.getElementById("u_state").value,
+        condition: document.getElementById("u_condition").value,
+        body_type: document.getElementById("u_body_type").value,
+    };
 
-    if (price) body.price = parseInt(price);
-    if (odometer) body.odometer = parseInt(odometer);
-    if (condition) body.condition = condition;
+    const intFields = ["year", "price", "odometer"];
+    for (const [key, value] of Object.entries(fields)) {
+        if (value) {
+            body[key] = intFields.includes(key) ? parseInt(value) : value;
+        }
+    }
 
     if (Object.keys(body).length === 0) {
         return showResult("update-result", "Please enter at least one field to update.", false);
