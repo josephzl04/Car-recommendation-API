@@ -100,7 +100,7 @@ def create_car(car: CarCreate, api_key: str = Depends(require_api_key)):
         )
     return {"message": "Car created successfully", "listing_id": new_listing_id}
 
-@app.put("/cars/{listing_id}", status_code=201, responses = {401: {"description": "Unauthorized"}, 404: {"description": "Car not found"}, 400: {"description": "Invalid Request"}})
+@app.put("/cars/{listing_id}", status_code=200, responses = {401: {"description": "Unauthorized"}, 404: {"description": "Car not found"}, 400: {"description": "Invalid Request"}})
 def update_car(listing_id: int, car: CarUpdate, api_key: str = Depends(require_api_key)):
     """
     Update an existing car listing in the database.
