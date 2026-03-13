@@ -1,3 +1,23 @@
+async function unlockAdmin() {
+    const key = document.getElementById("api_key").value;
+    if (!key) return showResult("auth-result", "Please enter your API key.", false);
+
+    try {
+        const res = await fetch(`${API_URL}/admin/test`, {
+            headers: { "X-API-Key": key }
+        });
+        if (res.status === 200) {
+            document.getElementById("admin-content").style.display = "block";
+            document.querySelector(".search-form").style.display = "none";
+            showResult("auth-result", "Access granted.", true);
+        } else {
+            showResult("auth-result", "Invalid API key.", false);
+        }
+    } catch {
+        showResult("auth-result", "Error connecting to API.", false);
+    }
+}
+
 function getApiKey() {
     return document.getElementById("api_key").value;
 }
