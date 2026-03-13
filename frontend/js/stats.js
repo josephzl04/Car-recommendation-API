@@ -49,15 +49,32 @@ async function loadStats() {
 
         const trendsRes = await fetch(`${API_URL}/stats/price-trends`);
         const trendsData = await trendsRes.json();
+        const trends = trendsData.price_trends.reverse(); // oldest to newest
 
-        document.getElementById("price-trends").innerHTML = renderTable(
-            trendsData.price_trends,
-            [
-                { key: "year", label: "Year" },
-                { key: "avg_price", label: "Avg Price", format: v => "$" + Number(v).toLocaleString() },
-                { key: "listings", label: "Listings" }
-            ]
-        );
+        const ctx = document.getElementById("price-chart").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: trends.map(t => t.year),
+                datasets: [{
+                    label: "Average Price ($)",
+                    data: trends.map(t => t.avg_price),
+                    backgroundColor: "rgba(233, 69, 96, 0.7)",
+                    borderColor: "#e94560",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { color: "white" } }
+                },
+                scales: {
+                    x: { ticks: { color: "white" }, grid: { color: "rgba(255,255,255,0.1)" } },
+                    y: { ticks: { color: "white", callback: v => "$" + v.toLocaleString() }, grid: { color: "rgba(255,255,255,0.1)" } }
+                }
+            }
+        });
 
     } catch (error) {
         console.error("Failed to load stats:", error);
