@@ -109,24 +109,16 @@ API_KEY=your_secret_key_here
 DATABASE_URL=sqlite:///cars.db
 ```
 
-To generate a secure API key:
-```bash
-python -c "import secrets; print(secrets.token_hex(32))"
-```
 #### 3. Download the dataset
 Download `vehicles.csv` from [Kaggle](https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data/data) and place it in the `dataset/` folder so the path is:
 ```
 dataset/vehicles.csv
 ```
 
-#### 4. Import the dataset
-```bash
-python database/import_dataset.py
-```
-
 This imports up to 50,000 rows into the local SQLite database.
 
 #### 5. Build the Docker image
+Make sure to open Docker Desktop
 ``` bash
 docker build -t cars-api .
 ```
