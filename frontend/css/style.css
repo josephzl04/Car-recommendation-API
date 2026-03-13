@@ -317,3 +317,53 @@ main {
 .stats-table tr:hover td {
     background: rgba(255,255,255,0.03);
 }
+
+.listing-id {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+}
+
+.car-extra {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.extra-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.extra-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.extra-value {
+    display: block;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.btn-expand {
+    margin-top: 10px;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-expand:hover {
+    border-color: rgba(255,255,255,0.5);
+    color: white;
+}
