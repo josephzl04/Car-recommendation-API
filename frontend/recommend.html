@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommend Cars - CarAPI</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">CarAPI</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="search.html">Search</a></li>
+            <li><a href="recommend.html">Recommend</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-content">
+        <h1>Get Recommendations</h1>
+        <p class="page-subtitle">Enter your budget and preferences to get the best value cars</p>
+
+        <div class="search-form">
+            <div class="form-grid">
+                <input type="number" id="budget" placeholder="Budget $ (required)">
+                <input type="number" id="max_odometer" placeholder="Max mileage (optional)">
+                <input type="number" id="min_year" placeholder="Min year (optional)">
+                <input type="text" id="fuel" placeholder="Fuel e.g. gas (optional)">
+                <input type="text" id="transmission" placeholder="Transmission (optional)">
+            </div>
+            <button class="btn btn-primary" onclick="recommendCars()">Get Recommendations</button>
+            <p class="search-note">Scored by price, mileage, year, fuel and transmission match</p>
+        </div>
+
+        <div id="results"></div>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/recommend.js"></script>
+</body>
+</html>

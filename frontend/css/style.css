@@ -156,7 +156,10 @@ main {
 .page-content {
     max-width: 900px;
     margin: 60px auto;
-    padding: 0 20px;
+    padding: 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
 }
 
 .page-content h1 {
@@ -178,6 +181,12 @@ main {
     padding: 24px;
     margin-bottom: 30px;
     max-width: 1000px;
+}
+
+.search-note {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    margin-top: 10px;
 }
 
 .form-grid {
@@ -251,4 +260,15 @@ main {
 
 .no-results {
     color: rgba(255,255,255,0.6);
+}
+
+.score-badge {
+    margin-top: 8px;
+    display: inline-block;
+    background: rgba(233,69,96,0.2);
+    color: #e94560;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
