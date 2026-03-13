@@ -348,14 +348,14 @@ def market_insights():
     with engine.connect() as conn:
         affordable_manufacturers = conn.execute(text("""
             SELECT manufacturer, ROUND(AVG(price), 0) as avg_price, COUNT(*) as listings
-            FROM cars GROUP BY LOWER(manufacturer)
+            FROM cars GROUP BY manufacturer
             HAVING COUNT(*) > 50
             ORDER BY avg_price ASC LIMIT 10
         """)).fetchall()
 
         best_value_states = conn.execute(text("""
             SELECT state, ROUND(AVG(price), 0) as avg_price, COUNT(*) as listings
-            FROM cars GROUP BY LOWER(state)
+            FROM cars GROUP BY state
             HAVING COUNT(*) > 50
             ORDER BY avg_price ASC LIMIT 10
         """)).fetchall()
@@ -363,7 +363,7 @@ def market_insights():
         price_by_body_type = conn.execute(text("""
             SELECT body_type, ROUND(AVG(price), 0) as avg_price, COUNT(*) as listings
             FROM cars WHERE body_type IS NOT NULL
-            GROUP BY LOWER(body_type)
+            GROUP BY body_type
             ORDER BY avg_price DESC
         """)).fetchall()
 
@@ -392,7 +392,7 @@ def get_stats():
         top_manufacturers = conn.execute(text("""
             SELECT manufacturer, COUNT(*) as listings, ROUND(AVG(price), 0) as avg_price
             FROM cars
-            GROUP BY LOWER(manufacturer)
+            GROUP BY manufacturer
             ORDER BY listings DESC
             LIMIT 10
         """)).fetchall()
@@ -400,25 +400,24 @@ def get_stats():
         fuel_breakdown = conn.execute(text("""
             SELECT fuel, COUNT(*) as count, ROUND(AVG(price), 0) as avg_price
             FROM cars
-            GROUP BY LOWER(fuel)
+            GROUP BY fuel
             ORDER BY count DESC
         """)).fetchall()
 
         transmission_breakdown = conn.execute(text("""
             SELECT transmission, COUNT(*) as count
             FROM cars
-            GROUP BY LOWER(transmission)
+            GROUP BY transmission
             ORDER BY count DESC
         """)).fetchall()
 
         top_states = conn.execute(text("""
             SELECT state, COUNT(*) as listings
             FROM cars
-            GROUP BY LOWER(state)
+            GROUP BY state
             ORDER BY listings DESC
             LIMIT 10
         """)).fetchall()
-
     return {
         "overview": dict(overview._mapping),
         "top_manufacturers": [dict(r._mapping) for r in top_manufacturers],
